@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GimsLab Tools Gateway | 통합 도구 허브</title>
+  <meta name="description" content="GimsLab에서 제공하는 다양한 실용 웹 도구들을 한곳에서 편리하게 이용할 수 있는 통합 게이트웨이 허브입니다.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #07090e;
+      --bg-card: rgba(18, 24, 38, 0.7);
+      --bg-card-hover: rgba(26, 34, 52, 0.85);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-color-hover: rgba(56, 189, 248, 0.4);
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --accent-cyan: #38bdf8;
+      --accent-indigo: #818cf8;
+      --accent-purple: #c084fc;
+      --glow-shadow: 0 0 35px -5px rgba(56, 189, 248, 0.15);
+      --card-radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56, 189, 248, 0.12), transparent),
+        radial-gradient(circle 400px at 90% 20%, rgba(129, 140, 248, 0.08), transparent);
+      color: var(--text-main);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Navbar */
+    nav {
+      border-bottom: 1px solid var(--border-color);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(7, 9, 14, 0.75);
+    }
+
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 72px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .brand-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(to right, #ffffff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 2px 8px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--accent-cyan);
+      border-radius: 9999px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .nav-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--text-main);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 64px 0 48px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: rgba(129, 140, 248, 0.1);
+      border: 1px solid rgba(129, 140, 248, 0.25);
+      color: #a5b4fc;
+      font-size: 0.825rem;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+
+    .hero-badge .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #34d399;
+      box-shadow: 0 0 10px #34d399;
+    }
+
+    .hero h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 .gradient-text {
+      background: linear-gradient(135deg, #ffffff 30%, #38bdf8 70%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.125rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 32px;
+    }
+
+    /* Search & Filter Bar */
+    .filter-wrapper {
+      max-width: 580px;
+      margin: 0 auto 48px;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 14px 20px 14px 48px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+      background: var(--bg-card-hover);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      pointer-events: none;
+    }
+
+    /* Tools Grid */
+    .tools-section {
+      margin-bottom: 64px;
+    }
+
+    .section-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title span.count {
+      font-size: 0.8rem;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2px 8px;
+      border-radius: 9999px;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+      gap: 24px;
+    }
+
+    /* Card */
+    .tool-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--card-radius);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .tool-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(56, 189, 248, 0.08), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-4px);
+      background: var(--bg-card-hover);
+      border-color: var(--border-color-hover);
+      box-shadow: var(--glow-shadow);
+    }
+
+    .tool-card:hover::before {
+      opacity: 1;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .tool-icon-wrapper {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(129, 140, 248, 0.1));
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.7rem;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      background: rgba(52, 211, 153, 0.12);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      color: #34d399;
+    }
+
+    .status-badge.planned {
+      background: rgba(148, 163, 184, 0.1);
+      border-color: rgba(148, 163, 184, 0.2);
+      color: var(--text-dim);
+    }
+
+    .tool-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tool-desc {
+      color: var(--text-muted);
+      font-size: 0.925rem;
+      margin-bottom: 20px;
+      flex-grow: 1;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border-color);
+      padding-top: 16px;
+      margin-top: auto;
+    }
+
+    .launch-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--accent-cyan);
+      transition: gap 0.2s;
+    }
+
+    .tool-card:hover .launch-btn {
+      gap: 12px;
+      color: #7dd3fc;
+    }
+
+    .path-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+
+    /* Architecture Info Box */
+    .info-card {
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.6) 0%, rgba(7, 9, 14, 0.8) 100%);
+      border: 1px solid var(--border-color);
+      border-radius: var(--card-radius);
+      padding: 32px;
+      margin-bottom: 64px;
+    }
+
+    .info-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .info-header h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .arch-flow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      margin-top: 20px;
+      padding: 16px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+    }
+
+    .flow-step {
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: #e2e8f0;
+    }
+
+    .flow-arrow {
+      color: var(--accent-cyan);
+      font-weight: bold;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: auto;
+      border-top: 1px solid var(--border-color);
+      padding: 32px 0;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.875rem;
+    }
+
+    footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    footer a:hover {
+      color: var(--accent-cyan);
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <div class="container nav-inner">
+      <a href="/" class="brand" id="brand-link">
+        <div class="brand-icon">
+          <svg width="22" height="22" viewBox="0 0 64 64" fill="none">
+            <circle cx="32" cy="32" r="20" stroke="#38bdf8" stroke-width="4" stroke-dasharray="80 20"/>
+            <polygon points="32,18 38,31 26,31" fill="#38bdf8"/>
+            <circle cx="32" cy="32" r="3" fill="#f8fafc"/>
+          </svg>
+        </div>
+        <div>
+          <span class="brand-title">GimsLab</span>
+          <span class="brand-badge">TOOLS</span>
+        </div>
+      </a>
+      <div class="nav-links">
+        <a href="https://github.com/gimslab" target="_blank" rel="noopener noreferrer" class="nav-link" id="nav-github">GitHub</a>
+        <a href="https://gimslab.com" target="_blank" rel="noopener noreferrer" class="nav-link" id="nav-main">GimsLab.com ↗</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        <span>GimsLab Integrated Gateway Hub</span>
+      </div>
+      <h1>
+        <span class="gradient-text">GimsLab Tools Gateway</span>
+      </h1>
+      <p>
+        간결하고 직관적인 도구들을 하나의 게이트웨이(<code>tools.gimslab.com</code>)에서 만나보세요.
+      </p>
+
+      <div class="filter-wrapper">
+        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input 
+          type="text" 
+          id="tool-search" 
+          class="search-input" 
+          placeholder="도구 이름이나 태그로 검색... (예: Timer, 운동)"
+          autocomplete="off"
+        >
+      </div>
+    </section>
+
+    <!-- Tools Grid Section -->
+    <section class="tools-section">
+      <div class="section-title">
+        <span>이용 가능한 도구</span>
+        <span class="count" id="tool-count">1</span>
+      </div>
+
+      <div class="tools-grid" id="tools-container">
+        <!-- TickTen Card -->
+        <a href="/tickten/" class="tool-card" id="card-tickten" data-title="TickTen 틱텐" data-tags="fitness timer interval beep 운동 스트레칭 타이머 비프">
+          <div class="card-top">
+            <div class="tool-icon-wrapper">
+              ⏱️
+            </div>
+            <span class="status-badge">
+              Active
+            </span>
+          </div>
+
+          <h2 class="tool-title">
+            TickTen
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M7 17L17 7M17 7H7M17 7V17"/>
+            </svg>
+          </h2>
+          <p class="tool-desc">
+            운동 및 스트레칭을 위한 간결한 인터벌 비프 사운드 타이머. 상대 경로 빌드로 게이트웨이에 최적화되어 있습니다.
+          </p>
+
+          <div class="tag-list">
+            <span class="tag">#Timer</span>
+            <span class="tag">#Interval</span>
+            <span class="tag">#Audio</span>
+            <span class="tag">#React</span>
+          </div>
+
+          <div class="card-footer">
+            <span class="path-label">/tickten/</span>
+            <span class="launch-btn">
+              실행하기
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </span>
+          </div>
+        </a>
+
+        <!-- Upcoming Slot Placeholder -->
+        <div class="tool-card" style="opacity: 0.6; cursor: default;" id="card-placeholder">
+          <div class="card-top">
+            <div class="tool-icon-wrapper" style="background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08);">
+              ✨
+            </div>
+            <span class="status-badge planned">
+              Coming Soon
+            </span>
+          </div>
+
+          <h2 class="tool-title" style="color: var(--text-muted);">
+            Next Tool
+          </h2>
+          <p class="tool-desc">
+            새로운 생산성 도구 및 유틸리티 앱이 준비 중입니다. 원하는 도구가 있다면 GimsLab에 언제든 제안해주세요.
+          </p>
+
+          <div class="tag-list">
+            <span class="tag">#Utility</span>
+            <span class="tag">#Productivity</span>
+          </div>
+
+          <div class="card-footer">
+            <span class="path-label">/tool2/</span>
+            <span style="font-size: 0.85rem; color: var(--text-dim);">준비 중</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Architecture & Gateway Info -->
+    <section class="info-card">
+      <div class="info-header">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+          <line x1="8" y1="21" x2="16" y2="21"></line>
+          <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
+        <h2>게이트웨이 프록시 아키텍처</h2>
+      </div>
+      <p style="color: var(--text-muted); font-size: 0.95rem;">
+        Cloudflare Pages Functions를 기반으로 하위 경로 요청을 각 앱의 전용 오리진으로 투명하게 역방향 프록시(Reverse Proxy)합니다.
+      </p>
+
+      <div class="arch-flow">
+        <div class="flow-step">사용자 요청 (tools.gimslab.com/tickten/)</div>
+        <div class="flow-arrow">➔</div>
+        <div class="flow-step">Pages Functions Router</div>
+        <div class="flow-arrow">➔</div>
+        <div class="flow-step">오리진 Fetch (tickten.pages.dev)</div>
+        <div class="flow-arrow">➔</div>
+        <div class="flow-step">투명한 응답 반환</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 GimsLab. All rights reserved. Powered by Cloudflare Pages & Functions.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Simple client-side search filter
+    const searchInput = document.getElementById('tool-search');
+    const cards = document.querySelectorAll('.tool-card[data-title]');
+    const countEl = document.getElementById('tool-count');
+
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase().trim();
+      let matchCount = 0;
+
+      cards.forEach((card) => {
+        const title = card.getAttribute('data-title').toLowerCase();
+        const tags = card.getAttribute('data-tags').toLowerCase();
+        if (!query || title.includes(query) || tags.includes(query)) {
+          card.style.display = 'flex';
+          matchCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      if (countEl) countEl.textContent = matchCount;
+    });
+  </script>
+</body>
+</html>

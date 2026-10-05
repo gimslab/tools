@@ -1,0 +1,15 @@
+{
+  "name": "gimslab-tools-gateway",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GimsLab Tools Gateway & Reverse Proxy Hub",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler pages dev public --port 8788",
+    "deploy": "wrangler pages deploy public --project-name tools-gateway",
+    "test:proxy": "node scripts/test-proxy.js"
+  },
+  "devDependencies": {
+    "wrangler": "^3.114.0 || ^4.0.0"
+  }
+}
